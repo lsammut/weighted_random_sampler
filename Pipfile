@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 vose-alias-method = "*"
+ipykernel = "*"
 
 [dev-packages]
 

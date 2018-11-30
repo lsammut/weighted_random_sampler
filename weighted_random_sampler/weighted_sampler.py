@@ -1,9 +1,10 @@
+import math
 from vose_sampler import VoseAlias
 
 def day_count(day, data):
     count = 0
-    for x in data:
-        count = count + data[x]["avail"][day]
+    for pid in data:
+        count = count + data[pid]["avail"][day]
     return count
 
 def weights(ave, pid, day_id, data):
@@ -11,9 +12,38 @@ def weights(ave, pid, day_id, data):
     ne_i = data[pid]["events"][day_id]
     nd_i = sum(data[pid]["avail"])
     av_i = data[pid]["avail"][day_id]
+
     weight = (1./np_d)*(ave - ne_i)*(av_i/nd_i)
+
     return weight
 
+
+def calc_weights(pid, day_id, data, calendar):
+
+    options = calendar['calendars']
+    days = calendar['days']
+    people = calendar['people']
+
+    days_left = days - day_id
+    expected_events = days / people
+
+    # pref = sum(data[pid]["pref"])
+    # options = len(data[pid]["pref"])
+    group_avail = day_count(day_id, data)   # np_d
+    avail_days = sum(data[pid]["avail"])    # nd_i
+    single_avail = data[pid]["avail"][day_id] # av_i
+    accrued_events = sum(data[pid]["events"]) # ne_i
+
+
+    a = (single_avail/group_avail)                    # group size factor
+    b = (expected_events - accrued_events)  # positive event factor
+    c = (1. / avail_days)           # availability factor
+    d = (expected_events - accrued_events - days_left)
+    # d = (options / pref)                    # preference facgtor
+
+    weight = a * math.exp(d)
+
+    return weight
 
 def main():
 
@@ -41,24 +71,31 @@ def main():
 
         for pid, datas in data.items():
 
-            weight = weights(ave, pid, day, data)
+            # weight = weights(ave, pid, day, data)
+            weight = calc_weights(pid, day, data, calendar_data)
             weight_sum = weight_sum + weight
 
             data[pid]["weights"][day] = weight
-            dist[pid] = weight
-
 
         for pid, datas in data.items():
             data[pid]["weights"][day] = data[pid]["weights"][day] / weight_sum
 
-            VA = VoseAlias(dist)
-            selected = VA.sample_n(size=1)
+            # allocate distribution
+            dist[pid] = data[pid]["weights"][day]
 
-            # update events array
-            for pid, datas in data.items():
-                data[pid]["events"][day]= int(selected[0] == pid)
+        VA = VoseAlias(dist)
+        selected = VA.sample_n(size=10)
 
-            print(data[selected[0]]["name"], "are selected.")
+        # update events array
+        for pid, datas in data.items():
+            data[pid]["events"][day]= int(selected[0] == pid)
+
+        # print(data[selected[0]]["name"], "are selected.")
+
+    # print(data)
+
+    for pid, datas in data.items():
+        print(data[pid]["events"], sum(data[pid]["events"]))
 
     return(data)
 
