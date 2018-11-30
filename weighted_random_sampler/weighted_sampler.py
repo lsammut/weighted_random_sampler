@@ -18,16 +18,15 @@ def weights(ave, pid, day_id, data):
 def main():
 
     from get_data import people_data, calendar_data
-    data = people_data
 
-    # main
-    day = 0
-    days = 5
-    people = 3
-    ave = (days/people)
-    weight_sum = 0
+    data = people_data
+    days = calendar_data['days']
+    people = calendar_data['people']
+    ave = (days / people)
+
 
     # initialise weight
+    weight_sum = 0
     for pid, datas in data.items():
         data[pid]["weights"] = [0] * days
 
@@ -38,25 +37,30 @@ def main():
     # initialise dist
     dist = {}
 
-    for pid, datas in data.items():
+    for day in range(days):
 
-        weight_i = weights(ave, pid, day, data)
-        weight_sum = weight_sum + weight_i
+        for pid, datas in data.items():
 
-        data[pid]["weights"][day] = weight_i
-        dist[pid] = weight_i
+            weight = weights(ave, pid, day, data)
+            weight_sum = weight_sum + weight
 
-        print(pid, weight_i)
+            data[pid]["weights"][day] = weight
+            dist[pid] = weight
 
-    for pid, datas in data.items():
-        data[pid]["weights"] = data[pid]["weights"][day] / weight_sum
-        print(pid, data[pid]["weights"])
 
-    VA = VoseAlias(dist)
-    selected = VA.sample_n(size=1)
+        for pid, datas in data.items():
+            data[pid]["weights"][day] = data[pid]["weights"][day] / weight_sum
 
-    print(data[selected[0]]["name"], "are selected.")
-    print(data)
+            VA = VoseAlias(dist)
+            selected = VA.sample_n(size=1)
+
+            # update events array
+            for pid, datas in data.items():
+                data[pid]["events"][day]= int(selected[0] == pid)
+
+            print(data[selected[0]]["name"], "are selected.")
+
+    return(data)
 
 
 if __name__ == "__main__":
