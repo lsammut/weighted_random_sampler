@@ -66,6 +66,7 @@ def main():
 
     # initialise dist
     dist = {}
+    winners = []
 
     for day in range(days):
 
@@ -84,18 +85,22 @@ def main():
             dist[pid] = data[pid]["weights"][day]
 
         VA = VoseAlias(dist)
-        selected = VA.sample_n(size=10)
+        selected = VA.sample_n(size=1)
 
         # update events array
         for pid, datas in data.items():
             data[pid]["events"][day]= int(selected[0] == pid)
 
-        # print(data[selected[0]]["name"], "are selected.")
-
-    # print(data)
+        # assign winners array
+        winners.append(data[selected[0]]["name"])
 
     for pid, datas in data.items():
         print(data[pid]["events"], sum(data[pid]["events"]))
+
+
+    print(winners)
+
+
 
     return(data)
 
