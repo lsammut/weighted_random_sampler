@@ -7,12 +7,12 @@ Calculate weighted probabilities for Vose Alias Sampling.
 
 Values specific to advent calendar application, from data object
 
- * people:          number of people                        (calendar)
- * days:            total number of days in time interval   (calendar)
- * single_avail:    daily availability                      (data)
- * group_avail:     number of people available on the day   (data)
- * avail_days:      number of available days                (data)
- * accrued_events:  number of positive events               (data)
+ * people:          number of people                        
+ * days:            total number of days in time interval   
+ * single_avail:    daily availability                      
+ * group_avail:     number of people available on the day   
+ * avail_days:      number of available days                
+ * accrued_events:  number of positive events               
  
 Derived values 
  * expected_events: average number of events
@@ -34,17 +34,6 @@ def count_days(day, pid, data):
     for day in range(day, len(data[pid]["avail"])):
         count = count + data[pid]["avail"][day]
     return count
-
-
-def weights(ave, pid, day_id, data):
-    np_d = day_count(day_id, data)
-    ne_i = data[pid]["events"][day_id]
-    nd_i = sum(data[pid]["avail"])
-    av_i = data[pid]["avail"][day_id]
-
-    weight = (1./np_d)*(ave - ne_i)*(av_i/nd_i)
-
-    return weight
 
 
 def calc_weights(pid, day, data, calendar):
@@ -74,9 +63,7 @@ def calc_weights(pid, day, data, calendar):
     return weight
 
 
-def main():
-
-    from get_data import people_data, calendar_data
+def main(people_data, calendar_data):
 
     data = people_data
     days = calendar_data['days']
@@ -120,16 +107,26 @@ def main():
         # assign winners array
         winners.append(data[selected[0]]["name"])
 
-    for pid, datas in data.items():
-        print(data[pid]["events"], sum(data[pid]["events"]))
-
-
-    print(winners)
-
-
-
-    return(data)
+    return data, winners
 
 
 if __name__ == "__main__":
-    main()
+
+    from get_data import people_data
+
+    calendar_data = {
+        'days': 24,
+        'calendars': 2,
+        'people': len(people_data)
+    }
+
+    data, winners = main(people_data, calendar_data)
+    days = calendar_data['days']
+
+    # print event array
+    for pid, datas in data.items():
+        print(data[pid]["events"], sum(data[pid]["events"]))
+
+    # print winners by name
+    print(winners)
+
