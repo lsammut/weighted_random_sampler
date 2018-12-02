@@ -19,6 +19,11 @@ Derived values
  * weight:          calculated
 """
 
+def safe_div(x,y):
+    if y == 0:
+        return 0
+    return x / y
+
 
 def day_count(day, data):
     """count the number of people available on a particular day"""
@@ -53,12 +58,12 @@ def calc_weights(pid, day, data, calendar):
     days_left = days - day
     expected_events = days / people
 
-    a = (single_avail / group_avail)                # group size factor
+    a = safe_div(single_avail, group_avail)                # group size factor
     b = (expected_events - accrued_events)          # positive event factor
     c = (avail_days - days_left)                    # availability factor
-    d = (options / pref)                            # preference factor
+    # d = (options / pref)                            # preference factor
 
-    weight = a * (math.exp(b) / math.exp(c)) * d
+    weight = a * (math.exp(b) / math.exp(c))
 
     return weight
 
@@ -92,7 +97,7 @@ def main(people_data, calendar_data):
             data[pid]["weights"][day] = weight
 
         for pid, datas in data.items():
-            data[pid]["weights"][day] = data[pid]["weights"][day] / weight_sum
+            data[pid]["weights"][day] = safe_div(data[pid]["weights"][day], weight_sum)
 
             # allocate distribution
             dist[pid] = data[pid]["weights"][day]
@@ -115,7 +120,7 @@ if __name__ == "__main__":
     from get_data import people_data
 
     calendar_data = {
-        'days': 24,
+        'days': 48,
         'calendars': 2,
         'people': len(people_data)
     }
