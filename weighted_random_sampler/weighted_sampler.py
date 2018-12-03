@@ -19,6 +19,7 @@ Derived values
  * weight:          calculated
 """
 
+
 def safe_div(x,y):
     if y == 0:
         return 0
@@ -61,7 +62,7 @@ def calc_weights(pid, day, data, calendar):
 
     a = safe_div(single_avail, group_avail)     # group size factor
     b = (expected_events - accrued_events)      # positive event factor
-    c = avail_days                              # availability factor
+    c = avail_left - days_left                  # availability factor
     # d = (options / pref)                      # preference factor
 
     weight = a * math.exp(b) / math.exp(c)
