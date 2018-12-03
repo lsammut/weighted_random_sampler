@@ -1,11 +1,3 @@
-# example calendar data
-calendar_data = {
-    'days': 48,
-    'calendars': 2,
-    'people': len(people_data)
-}
-
-
 # example people data
 people_data = {
     'id01': {'name': 'Person A', 'avail': [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'pref': [1, 1]},
@@ -17,6 +9,16 @@ people_data = {
     'id07': {'name': 'Person G', 'avail': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'pref': [0, 1]},
     'id08': {'name': 'Person H', 'avail': [1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1], 'pref': [1, 1]}
 }
+
+# example calendar data
+calendar_data = {
+    'days': 48,
+    'calendars': 2,
+    'people': len(people_data)
+}
+
+
+
 
 
 
