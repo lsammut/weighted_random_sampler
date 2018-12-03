@@ -56,14 +56,15 @@ def calc_weights(pid, day, data, calendar):
     accrued_events = sum(data[pid]["events"])
 
     days_left = days - day
+    avail_left = avail_days - days_left
     expected_events = days / people
 
-    a = safe_div(single_avail, group_avail)                # group size factor
-    b = (expected_events - accrued_events)          # positive event factor
-    c = (avail_days - days_left)                    # availability factor
-    # d = (options / pref)                            # preference factor
+    a = safe_div(single_avail, group_avail)     # group size factor
+    b = (expected_events - accrued_events)      # positive event factor
+    c = avail_days                              # availability factor
+    # d = (options / pref)                      # preference factor
 
-    weight = a * (math.exp(b) / math.exp(c))
+    weight = a * math.exp(b) / math.exp(c)
 
     return weight
 
@@ -117,13 +118,10 @@ def main(people_data, calendar_data):
 
 if __name__ == "__main__":
 
-    from get_data import people_data
+    from get_data import people_data, calendar_data
 
-    calendar_data = {
-        'days': 48,
-        'calendars': 2,
-        'people': len(people_data)
-    }
+    expected = calendar_data['days']/calendar_data['people']
+    print('expected:', expected)
 
     data, winners = main(people_data, calendar_data)
     days = calendar_data['days']
