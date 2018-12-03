@@ -44,7 +44,7 @@ def count_days(day, pid, data):
 def calc_weights(pid, day, data, calendar):
 
     options = calendar['calendars']
-    days = calendar['days']/options
+    days = calendar['days']
     people = calendar['people']
 
     pref = sum(data[pid]["pref"])
@@ -118,13 +118,7 @@ def main(people_data, calendar_data):
 
 if __name__ == "__main__":
 
-    from get_data import people_data
-
-    calendar_data = {
-        'days': 48,
-        'calendars': 2,
-        'people': len(people_data)
-    }
+    from get_data import people_data, calendar_data
 
     expected = calendar_data['days']/calendar_data['people']
     print('expected:', expected)
